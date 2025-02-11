@@ -3,16 +3,37 @@ import joblib
 import pandas as pd
 import numpy as np
 from sklearn.preprocessing import OneHotEncoder, StandardScaler
+import requests
+from io import BytesIO
 
-# Lade das trainierte Modell
-best_rf = joblib.load("rf_model.pkl")
+# URLs zu den Dateien auf GitHub (ersetze mit deinen echten Links)
+model_url = "https://github.com/LF6fcg/rf_kikalkulation/blob/main/streamlit_app/rf_model.pkl"
+encoder_url = "streamlit_app/onehot_encoder.pkl"
+scaler_url = "streamlit_app/scaler.pkl"
+feature_columns_url = "https://github.com/LF6fcg/rf_kikalkulation/blob/main/streamlit_app/feature_columns.pkl"
 
-# Lade den One-Hot-Encoder und den Scaler
-encoder = joblib.load("onehot_encoder.pkl")
-scaler = joblib.load("scaler.pkl")
+# Funktion zum Laden von Dateien von GitHub
+def load_file_from_github(url):
+    response = requests.get(url)
+    if response.status_code == 200:
+        return joblib.load(BytesIO(response.content))
+    else:
+        print(f"Fehler beim Laden der Datei: {response.status_code}")
+        return None
 
-# Lade die Feature-Spaltennamen
-feature_columns = joblib.load("feature_columns.pkl")
+# Lade das trainierte Modell, den One-Hot-Encoder, den Scaler und die Feature-Spaltennamen
+best_rf = load_file_from_github(model_url)
+encoder = load_file_from_github(encoder_url)
+scaler = load_file_from_github(scaler_url)
+feature_columns = load_file_from_github(feature_columns_url)
+
+# Prüfe, ob alle Dateien erfolgreich geladen wurden
+if best_rf is None or encoder is None or scaler is None or feature_columns is None:
+    st.error("Es gab ein Problem beim Laden der Dateien.")
+else:
+    st.success("Alle Dateien erfolgreich geladen!")
+
+# Dein Streamlit Code für die App geht hier weiter...
 
 # Streamlit-UI
 st.title("Vorhersage der Te-Zeit mit Random Forest")
