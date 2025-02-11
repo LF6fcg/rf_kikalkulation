@@ -7,10 +7,10 @@ import requests
 from io import BytesIO
 
 # URLs zu den Dateien auf GitHub (ersetze mit deinen echten Links)
-model_url = "https://github.com/LF6fcg/rf_kikalkulation/blob/main/streamlit_app/rf_model.pkl"
-encoder_url = "streamlit_app/onehot_encoder.pkl"
-scaler_url = "streamlit_app/scaler.pkl"
-feature_columns_url = "https://github.com/LF6fcg/rf_kikalkulation/blob/main/streamlit_app/feature_columns.pkl"
+model_url = "https://raw.githubusercontent.com/LF6fcg/rf_kikalkulation/main/streamlit_app/rf_model.pkl"
+encoder_url = "https://raw.githubusercontent.com/LF6fcg/rf_kikalkulation/main/streamlit_app/onehot_encoder.pkl"
+scaler_url = "https://raw.githubusercontent.com/LF6fcg/rf_kikalkulation/main/streamlit_app/scaler.pkl"
+feature_columns_url = "https://raw.githubusercontent.com/LF6fcg/rf_kikalkulation/main/streamlit_app/feature_columns.pkl"
 
 # Funktion zum Laden von Dateien von GitHub
 def load_file_from_github(url):
