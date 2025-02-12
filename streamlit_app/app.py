@@ -32,27 +32,38 @@ def login():
             st.session_state.logged_in = False
             st.error('Falscher Benutzername oder Passwort!')
  
-# URLs zu den Dateien auf GitHub (ersetze mit deinen echten Links)
-model_url = "https://raw.githubusercontent.com/LF6fcg/rf_kikalkulation/main/streamlit_app/rf_model.pkl"
-encoder_url = "https://raw.githubusercontent.com/LF6fcg/rf_kikalkulation/main/streamlit_app/onehot_encoder.pkl"
-scaler_url = "https://raw.githubusercontent.com/LF6fcg/rf_kikalkulation/main/streamlit_app/scaler.pkl"
-feature_columns_url = "https://raw.githubusercontent.com/LF6fcg/rf_kikalkulation/main/streamlit_app/feature_columns.pkl"
-
-#-------------------------------------------------------------------------------------------------------------------------
+#------------------------------------------------------------------------------------------------------------------------
 
 # Funktion für die App, die nur zugänglich ist, wenn der Benutzer eingeloggt ist
 def main_app():
-    # Lade das trainierte Modell, den One-Hot-Encoder, den Scaler und die Feature-Spaltennamen
-    best_rf = load_file_from_github(model_url)
-    encoder = load_file_from_github(encoder_url)
-    scaler = load_file_from_github(scaler_url)
-    feature_columns = load_file_from_github(feature_columns_url)
+
+    # URLs zu den Dateien auf GitHub (ersetze mit deinen echten Links)
+    model_url = "https://raw.githubusercontent.com/LF6fcg/rf_kikalkulation/main/streamlit_app/rf_model.pkl"
+    encoder_url = "https://raw.githubusercontent.com/LF6fcg/rf_kikalkulation/main/streamlit_app/onehot_encoder.pkl"
+    scaler_url = "https://raw.githubusercontent.com/LF6fcg/rf_kikalkulation/main/streamlit_app/scaler.pkl"
+    feature_columns_url = "https://raw.githubusercontent.com/LF6fcg/rf_kikalkulation/main/streamlit_app/feature_columns.pkl"
     
-    # Prüfe, ob alle Dateien erfolgreich geladen wurden
-    if best_rf is None or encoder is None or scaler is None or feature_columns is None:
-        st.error("Es gab ein Problem beim Laden der Dateien.")
-    else:
-        st.success("Alle Dateien erfolgreich geladen!")
+       # Lade Dateien nur, wenn sie nicht schon im Session State gespeichert sind
+    if "best_rf" not in st.session_state:
+        st.session_state.best_rf = load_file_from_github(model_url)
+    if "encoder" not in st.session_state:
+        st.session_state.encoder = load_file_from_github(encoder_url)
+    if "scaler" not in st.session_state:
+        st.session_state.scaler = load_file_from_github(scaler_url)
+    if "feature_columns" not in st.session_state:
+        st.session_state.feature_columns = load_file_from_github(feature_columns_url)
+    
+    # Zugriff auf die geladenen Objekte
+    best_rf = st.session_state.best_rf
+    encoder = st.session_state.encoder
+    scaler = st.session_state.scaler
+    feature_columns = st.session_state.feature_columns
+    
+    # Debugging: Überprüfe, ob alles geladen wurde
+    st.write(f"Model geladen: {best_rf is not None}")
+    st.write(f"Encoder geladen: {encoder is not None}")
+    st.write(f"Scaler geladen: {scaler is not None}")
+    st.write(f"Feature Columns geladen: {feature_columns is not None}")
     
     # Dein Streamlit Code für die App geht hier weiter...
     # Streamlit-UI
