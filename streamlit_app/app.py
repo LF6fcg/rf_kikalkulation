@@ -36,29 +36,17 @@ def login():
 
 # Funktion für die App, die nur zugänglich ist, wenn der Benutzer eingeloggt ist
 def main_app():
-
     # URLs zu den Dateien auf GitHub (ersetze mit deinen echten Links)
     model_url = "https://raw.githubusercontent.com/LF6fcg/rf_kikalkulation/main/streamlit_app/rf_model.pkl"
     encoder_url = "https://raw.githubusercontent.com/LF6fcg/rf_kikalkulation/main/streamlit_app/onehot_encoder.pkl"
     scaler_url = "https://raw.githubusercontent.com/LF6fcg/rf_kikalkulation/main/streamlit_app/scaler.pkl"
     feature_columns_url = "https://raw.githubusercontent.com/LF6fcg/rf_kikalkulation/main/streamlit_app/feature_columns.pkl"
     
-       # Lade Dateien nur, wenn sie nicht schon im Session State gespeichert sind
-    if "best_rf" not in st.session_state:
-        st.session_state.best_rf = load_file_from_github(model_url)
-    if "encoder" not in st.session_state:
-        st.session_state.encoder = load_file_from_github(encoder_url)
-    if "scaler" not in st.session_state:
-        st.session_state.scaler = load_file_from_github(scaler_url)
-    if "feature_columns" not in st.session_state:
-        st.session_state.feature_columns = load_file_from_github(feature_columns_url)
-    
-    # Zugriff auf die geladenen Objekte
-    best_rf = st.session_state.best_rf
-    encoder = st.session_state.encoder
-    scaler = st.session_state.scaler
-    feature_columns = st.session_state.feature_columns
-    
+    best_rf = load_file_from_github(model_url)
+    encoder = load_file_from_github(encoder_url)
+    scaler = load_file_from_github(scaler_url)
+    feature_columns = load_file_from_github(feature_columns_url)
+
     # Debugging: Überprüfe, ob alles geladen wurde
     st.write(f"Model geladen: {best_rf is not None}")
     st.write(f"Encoder geladen: {encoder is not None}")
@@ -66,6 +54,7 @@ def main_app():
     st.write(f"Feature Columns geladen: {feature_columns is not None}")
     
     # Dein Streamlit Code für die App geht hier weiter...
+    
     # Streamlit-UI
     st.title("Vorhersage der Te-Zeit mit Random Forest")
     
