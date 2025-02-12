@@ -36,9 +36,17 @@ def login():
 # URLs zu den Dateien auf GitHub (ersetze mit deinen echten Links)
 model_url = "https://raw.githubusercontent.com/LF6fcg/rf_kikalkulation/main/streamlit_app/rf_model.pkl"
 encoder_url = "https://raw.githubusercontent.com/LF6fcg/rf_kikalkulation/main/streamlit_app/onehot_encoder.pkl"
-@@ -21,61 +48,72 @@ def load_file_from_github(url):
-print(f"Fehler beim Laden der Datei: {response.status_code}")
-return None
+scaler_url = "https://raw.githubusercontent.com/LF6fcg/rf_kikalkulation/main/streamlit_app/scaler.pkl"
+feature_columns_url = "https://raw.githubusercontent.com/LF6fcg/rf_kikalkulation/main/streamlit_app/feature_columns.pkl"
+
+# Funktion zum Laden von Dateien von GitHub
+def load_file_from_github(url):
+    response = requests.get(url)
+    if response.status_code == 200:
+        return joblib.load(BytesIO(response.content))
+    else:
+        print(f"Fehler beim Laden der Datei: {response.status_code}")
+        return None
 
 # Lade das trainierte Modell, den One-Hot-Encoder, den Scaler und die Feature-Spaltennamen
 best_rf = load_file_from_github(model_url)
@@ -90,6 +98,7 @@ X_numerical_df = pd.DataFrame(X_numerical_scaled, columns=['Sägelänge', 'Stabl
 
 # Kombiniere numerische und kategorische Merkmale
 X_processed = pd.concat([X_numerical_df, X_categorical_df], axis=1)
+
 # Funktion für die App, die nur zugänglich ist, wenn der Benutzer eingeloggt ist
 def main_app():
     # Lade das trainierte Modell, den One-Hot-Encoder, den Scaler und die Feature-Spaltennamen
@@ -105,7 +114,6 @@ def main_app():
         st.success("Alle Dateien erfolgreich geladen!")
     
     # Dein Streamlit Code für die App geht hier weiter...
-    
     # Streamlit-UI
     st.title("Vorhersage der Te-Zeit mit Random Forest")
     
@@ -161,6 +169,7 @@ if 'logged_in' not in st.session_state:
 if st.button("Vorhersage starten"):
     te_pred = best_rf.predict(X_processed)
     st.write(f"**Vorhergesagte TE-Zeit:** {te_pred[0]:.4f}")
+    
 if st.session_state.logged_in:
     main_app()  # Wenn eingeloggt, zeige die App
 else:
