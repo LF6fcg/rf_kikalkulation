@@ -61,12 +61,6 @@ def main_app():
     encoder = load_file_from_github(encoder_url)
     scaler = load_file_from_github(scaler_url)
     feature_columns = load_file_from_github(feature_columns_url)
-
-    # Debugging: Überprüfe, ob alles geladen wurde
-    st.write(f"Model geladen: {best_rf is not None}")
-    st.write(f"Encoder geladen: {encoder is not None}")
-    st.write(f"Scaler geladen: {scaler is not None}")
-    st.write(f"Feature Columns geladen: {feature_columns is not None}")
     
     # Dein Streamlit Code für die App geht hier weiter...
     
