@@ -19,16 +19,14 @@ files = {
     "feature_columns": "feature_columns.pkl"
 }
 
-# Funktion zum sicheren Laden von Dateien von GitHub mit Token
-def load_file_from_github(file_key):
-    url = base_url + files[file_key]
+def load_file_from_github(url):
     headers = {"Authorization": f"token {github_token}"}
-    
     response = requests.get(url, headers=headers)
+
     if response.status_code == 200:
         return joblib.load(BytesIO(response.content))
     else:
-        st.error(f"Fehler beim Laden der Datei {files[file_key]}: {response.status_code}")
+        st.error(f"Fehler beim Laden der Datei {url}: {response.status_code}")
         return None
 
 # Benutzername und Passwort (sicherer wäre eine verschlüsselte Speicherung)
