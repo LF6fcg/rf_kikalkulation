@@ -7,6 +7,30 @@ import requests
 from io import BytesIO
 import hashlib
 
+# Zugriff auf den Token aus den Streamlit-Secrets
+github_token = st.secrets["github"]["token"]
+
+# URLs zu den Dateien auf GitHub (ersetze mit deinen echten Links)
+base_url = "https://raw.githubusercontent.com/LF6fcg/rf_kikalkulation/main/streamlit_app/"
+files = {
+    "model": "rf_model.pkl",
+    "encoder": "onehot_encoder.pkl",
+    "scaler": "scaler.pkl",
+    "feature_columns": "feature_columns.pkl"
+}
+
+# Funktion zum sicheren Laden von Dateien von GitHub mit Token
+def load_file_from_github(file_key):
+    url = base_url + files[file_key]
+    headers = {"Authorization": f"token {github_token}"}
+    
+    response = requests.get(url, headers=headers)
+    if response.status_code == 200:
+        return joblib.load(BytesIO(response.content))
+    else:
+        st.error(f"Fehler beim Laden der Datei {files[file_key]}: {response.status_code}")
+        return None
+
 # Benutzername und Passwort (sicherer wäre eine verschlüsselte Speicherung)
 USERNAME = 'PRA'
 PASSWORD = 'ki_gaex'
@@ -21,6 +45,9 @@ stored_password_hash = hash_password(PASSWORD)
 # Funktion für das Login
 def login():
     st.title('Login')
+    if "logged_in" not in st.session_state:
+        st.session_state.logged_in = False
+        
     username_input = st.text_input('Benutzername')
     password_input = st.text_input('Passwort', type='password')
 
@@ -31,7 +58,11 @@ def login():
         else:
             st.session_state.logged_in = False
             st.error('Falscher Benutzername oder Passwort!')
-
+            
+# Login prüfen, bevor die App geladen wird
+if not st.session_state.get("logged_in", False):
+    login()
+    st.stop()  # Stoppt die App, falls nicht eingeloggt
 #----------------------------------------------------------------------
 # URLs zu den Dateien auf GitHub (ersetze mit deinen echten Links)
 model_url = "https://raw.githubusercontent.com/LF6fcg/rf_kikalkulation/main/streamlit_app/rf_model.pkl"
