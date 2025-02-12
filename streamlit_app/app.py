@@ -31,6 +31,21 @@ def login():
         else:
             st.session_state.logged_in = False
             st.error('Falscher Benutzername oder Passwort!')
+
+def load_file_from_github(url):
+    try:
+        response = requests.get(url)
+        response.raise_for_status()  # Überprüfen, ob der Request erfolgreich war (Statuscode 200)
+        file_content = BytesIO(response.content)  # Inhalt der Datei in Bytes umwandeln
+        return joblib.load(file_content)  # Datei mit joblib laden (vorausgesetzt, sie ist im Pickle-Format)
+    except requests.exceptions.RequestException as e:
+        st.error(f"Fehler beim Laden der Datei: {url}")
+        st.error(str(e))
+        return None
+    except Exception as e:
+        st.error(f"Fehler beim Laden der Datei: {url}")
+        st.error(str(e))
+        return None
  
 #------------------------------------------------------------------------------------------------------------------------
 
