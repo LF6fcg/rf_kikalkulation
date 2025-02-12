@@ -159,16 +159,9 @@ def main_app():
         te_pred = best_rf.predict(X_processed)
         st.write(f"**Vorhergesagte TE-Zeit:** {te_pred[0]:.4f}")
 
-# Stelle sicher, dass alle Features in der richtigen Reihenfolge sind
-X_processed = X_processed.reindex(columns=feature_columns, fill_value=0)
 # Logik für den Login-Status
 if 'logged_in' not in st.session_state:
     st.session_state.logged_in = False
-
-# Vorhersage durchführen
-if st.button("Vorhersage starten"):
-    te_pred = best_rf.predict(X_processed)
-    st.write(f"**Vorhergesagte TE-Zeit:** {te_pred[0]:.4f}")
     
 if st.session_state.logged_in:
     main_app()  # Wenn eingeloggt, zeige die App
